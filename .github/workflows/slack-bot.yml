@@ -1,0 +1,190 @@
+name: Slack Bot
+on: workflow_dispatch
+
+jobs:
+  say_hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: hello
+        run: |
+          echo "Hello"
+      - name: checkout
+        id: checkout
+        uses: actions/checkout@v2
+      - name: install rust tool chain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+      # - name: execute
+      #   with:
+      #     command: run
+      - name: Post to a Slack channel
+        id: slack
+        uses: slackapi/slack-github-action@v1.17.0
+        with:
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          channel-id: "C5YT55F5E"
+          # For posting a simple plain text message
+          slack-message: "GitHub build result: ${{ job.status }} 🙇‍♂️ "
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      - name: Send custom JSON data to Slack workflow
+        id: slack_payload
+        uses: slackapi/slack-github-action@v1.17.0
+        with:
+          channel-id: "C5YT55F5E"
+          # This data can be any valid JSON from a previous step in the GitHub Action
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "This is a header block",
+                    "emoji": true
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "*this is plain_text text*",
+                      "emoji": true
+                    },
+                    {
+                      "type": "plain_text",
+                      "text": "*this is plain_text text*",
+                      "emoji": true
+                    },
+                    {
+                      "type": "plain_text",
+                      "text": "*this is plain_text text*",
+                      "emoji": true
+                    },
+                    {
+                      "type": "plain_text",
+                      "text": "*this is plain_text text*",
+                      "emoji": true
+                    },
+                    {
+                      "type": "plain_text",
+                      "text": "*this is plain_text text*",
+                      "emoji": true
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Pick an item from the dropdown list"
+                  },
+                  "accessory": {
+                    "type": "static_select",
+                    "placeholder": {
+                      "type": "plain_text",
+                      "text": "Select an item",
+                      "emoji": true
+                    },
+                    "options": [
+                      {
+                        "text": {
+                          "type": "plain_text",
+                          "text": "*this is plain_text text*",
+                          "emoji": true
+                        },
+                        "value": "value-0"
+                      },
+                      {
+                        "text": {
+                          "type": "plain_text",
+                          "text": "*this is plain_text text*",
+                          "emoji": true
+                        },
+                        "value": "value-1"
+                      },
+                      {
+                        "text": {
+                          "type": "plain_text",
+                          "text": "*this is plain_text text*",
+                          "emoji": true
+                        },
+                        "value": "value-2"
+                      }
+                    ],
+                    "action_id": "static_select-action"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "This is a section block with a button."
+                  },
+                  "accessory": {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "Click Me",
+                      "emoji": true
+                    },
+                    "value": "click_me_123",
+                    "action_id": "button-action"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "This is a section block with checkboxes."
+                  },
+                  "accessory": {
+                    "type": "checkboxes",
+                    "options": [
+                      {
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "*this is mrkdwn text*"
+                        },
+                        "description": {
+                          "type": "mrkdwn",
+                          "text": "*this is mrkdwn text*"
+                        },
+                        "value": "value-0"
+                      },
+                      {
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "*this is mrkdwn text*"
+                        },
+                        "description": {
+                          "type": "mrkdwn",
+                          "text": "*this is mrkdwn text*"
+                        },
+                        "value": "value-1"
+                      },
+                      {
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "*this is mrkdwn text*"
+                        },
+                        "description": {
+                          "type": "mrkdwn",
+                          "text": "*this is mrkdwn text*"
+                        },
+                        "value": "value-2"
+                      }
+                    ],
+                    "action_id": "checkboxes-action"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
