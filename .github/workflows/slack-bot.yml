@@ -31,17 +31,17 @@ jobs:
       - name: execute
         id: execute-cargo-run
         run: echo "::set-output name=RESULT::$(cargo run ${{ github.event.inputs.date }} ${{ github.event.inputs.prefecture }} 2>/dev/null)"
-      - name: Post to a Slack channel
-        id: slack
-        uses: slackapi/slack-github-action@v1.17.0
-        with:
-          # Slack channel id, channel name, or user id to post message.
-          # See also: https://api.slack.com/methods/chat.postMessage#channels
-          channel-id: ${{ github.event.inputs.channel }}
-          # For posting a simple plain text message
-          slack-message: "東京都の20220122の感染者数は ${{ steps.execute-cargo-run.outputs.RESULT }}人でした！ "
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      # - name: Post to a Slack channel
+      #   id: slack
+      #   uses: slackapi/slack-github-action@v1.17.0
+      #   with:
+      #     # Slack channel id, channel name, or user id to post message.
+      #     # See also: https://api.slack.com/methods/chat.postMessage#channels
+      #     channel-id: ${{ github.event.inputs.channel }}
+      #     # For posting a simple plain text message
+      #     slack-message: "東京都の20220122の感染者数は ${{ steps.execute-cargo-run.outputs.RESULT }}人でした！ "
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Send custom JSON data to Slack workflow
         id: slack_payload
         uses: slackapi/slack-github-action@v1.17.0
@@ -52,149 +52,11 @@ jobs:
             {
               "blocks": [
                 {
-                  "type": "divider"
-                },
-                {
-                  "type": "header",
+                  "type": "section",
                   "text": {
                     "type": "plain_text",
-                    "text": "This is a header block",
+                    "text": "${{ steps.execute-cargo-run.outputs.prefecture }}の${{ steps.execute-cargo-run.outputs.date }}の感染者数は ${{ steps.execute-cargo-run.outputs.RESULT }}人でした！ ",
                     "emoji": true
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "plain_text",
-                      "text": "*this is plain_text text*",
-                      "emoji": true
-                    },
-                    {
-                      "type": "plain_text",
-                      "text": "*this is plain_text text*",
-                      "emoji": true
-                    },
-                    {
-                      "type": "plain_text",
-                      "text": "*this is plain_text text*",
-                      "emoji": true
-                    },
-                    {
-                      "type": "plain_text",
-                      "text": "*this is plain_text text*",
-                      "emoji": true
-                    },
-                    {
-                      "type": "plain_text",
-                      "text": "*this is plain_text text*",
-                      "emoji": true
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Pick an item from the dropdown list"
-                  },
-                  "accessory": {
-                    "type": "static_select",
-                    "placeholder": {
-                      "type": "plain_text",
-                      "text": "Select an item",
-                      "emoji": true
-                    },
-                    "options": [
-                      {
-                        "text": {
-                          "type": "plain_text",
-                          "text": "*this is plain_text text*",
-                          "emoji": true
-                        },
-                        "value": "value-0"
-                      },
-                      {
-                        "text": {
-                          "type": "plain_text",
-                          "text": "*this is plain_text text*",
-                          "emoji": true
-                        },
-                        "value": "value-1"
-                      },
-                      {
-                        "text": {
-                          "type": "plain_text",
-                          "text": "*this is plain_text text*",
-                          "emoji": true
-                        },
-                        "value": "value-2"
-                      }
-                    ],
-                    "action_id": "static_select-action"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "This is a section block with a button."
-                  },
-                  "accessory": {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "text": "Click Me",
-                      "emoji": true
-                    },
-                    "value": "click_me_123",
-                    "action_id": "button-action"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "This is a section block with checkboxes."
-                  },
-                  "accessory": {
-                    "type": "checkboxes",
-                    "options": [
-                      {
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": "*this is mrkdwn text*"
-                        },
-                        "description": {
-                          "type": "mrkdwn",
-                          "text": "*this is mrkdwn text*"
-                        },
-                        "value": "value-0"
-                      },
-                      {
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": "*this is mrkdwn text*"
-                        },
-                        "description": {
-                          "type": "mrkdwn",
-                          "text": "*this is mrkdwn text*"
-                        },
-                        "value": "value-1"
-                      },
-                      {
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": "*this is mrkdwn text*"
-                        },
-                        "description": {
-                          "type": "mrkdwn",
-                          "text": "*this is mrkdwn text*"
-                        },
-                        "value": "value-2"
-                      }
-                    ],
-                    "action_id": "checkboxes-action"
                   }
                 }
               ]
