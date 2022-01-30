@@ -1,6 +1,6 @@
-use reqwest::*;
+use anyhow::{Context, Result};
+use clap::Parser;
 use serde::{Deserialize, Serialize};
-use serde_json::Result;
 
 #[derive(Deserialize, Debug)]
 struct ErrorInfo {
@@ -22,19 +22,27 @@ struct Response {
     itemList: Vec<Item>,
 }
 
-#[tokio::main]
-async fn main() {
-    // TODO: 日付を注入できるようにする
-    let response = reqwest::get(
-        "https://opendata.corona.go.jp/api/Covid19JapanAll?date=20220123&dataName=東京都",
-    )
-    .await
-    .unwrap()
-    .text()
-    .await
-    .unwrap();
+#[derive(Parser)]
+struct Cli {
+    date: String,
+    prefecture: String,
+}
 
-    let ret: Response = serde_json::from_str(&response).unwrap();
+#[tokio::main]
+async fn main() -> Result<()> {
+    let args = Cli::parse();
+
+    let response = reqwest::get(format!(
+        "https://opendata.corona.go.jp/api/Covid19JapanAll?date={}&dataName={}",
+        args.date, args.prefecture
+    ))
+    .await?
+    .text()
+    .await?;
+
+    let ret: Response = serde_json::from_str(&response)?;
 
     println!("{}", ret.itemList.first().unwrap().npatients);
+
+    Ok(())
 }
