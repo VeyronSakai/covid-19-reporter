@@ -8,8 +8,12 @@ on:
         default: ""
       prefecture:
         required: true
-        description: 都道府県名
-        default: 東京都
+        description: 都道府県 (例\:東京都、神奈川県)
+        default: ""
+      channel:
+        required: true
+        description: チャンネルIDまたはチャンネル名
+        default: ""
 
 jobs:
   report-covid19:
@@ -33,7 +37,7 @@ jobs:
         with:
           # Slack channel id, channel name, or user id to post message.
           # See also: https://api.slack.com/methods/chat.postMessage#channels
-          channel-id: "C5YT55F5E"
+          channel-id: ${{ github.event.inputs.channel }}
           # For posting a simple plain text message
           slack-message: "東京都の20220122の感染者数は ${{ steps.execute-cargo-run.outputs.RESULT }}人でした！ "
         env:
@@ -42,7 +46,7 @@ jobs:
         id: slack_payload
         uses: slackapi/slack-github-action@v1.17.0
         with:
-          channel-id: "C5YT55F5E"
+          channel-id: ${{ github.event.inputs.channel }}
           # This data can be any valid JSON from a previous step in the GitHub Action
           payload: |
             {
