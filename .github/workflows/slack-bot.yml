@@ -15,9 +15,8 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      # - name: execute
-      #   with:
-      #     command: run
+      - name: execute
+        run: cargo run 20220122 東京都
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.17.0
