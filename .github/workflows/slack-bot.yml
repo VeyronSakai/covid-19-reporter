@@ -2,7 +2,7 @@ name: Slack Bot
 on: workflow_dispatch
 
 jobs:
-  say_hello:
+  report-covid19:
     runs-on: ubuntu-latest
     outputs:
       output1: ${{ steps.step1.outputs.patients }}
@@ -17,8 +17,6 @@ jobs:
       - name: execute
         id: execute-cargo-run
         run: echo "::set-output name=RESULT::$(cargo run 20220122 東京都 2>/dev/null)"
-      - name: print
-        run: echo "The patients num is ${{ steps.execute-cargo-run.outputs.RESULT }}"
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.17.0
