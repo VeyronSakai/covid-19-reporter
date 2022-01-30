@@ -7,9 +7,6 @@ jobs:
     outputs:
       output1: ${{ steps.step1.outputs.patients }}
     steps:
-      - name: hello
-        run: |
-          echo "Hello"
       - name: checkout
         id: checkout
         uses: actions/checkout@v2
@@ -30,7 +27,7 @@ jobs:
           # See also: https://api.slack.com/methods/chat.postMessage#channels
           channel-id: "C5YT55F5E"
           # For posting a simple plain text message
-          slack-message: "GitHub build result: ${{ job.status }} 🙇‍♂️ "
+          slack-message: "東京都の20220122の感染者数は ${{ steps.execute-cargo-run.outputs.RESULT }}人でした！ "
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
       - name: Send custom JSON data to Slack workflow
