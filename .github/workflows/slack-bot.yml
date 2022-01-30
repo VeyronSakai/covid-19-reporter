@@ -4,6 +4,8 @@ on: workflow_dispatch
 jobs:
   say_hello:
     runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.step1.outputs.patients }}
     steps:
       - name: hello
         run: |
@@ -16,7 +18,7 @@ jobs:
         with:
           toolchain: stable
       - name: execute
-        run: cargo run 20220122 東京都
+        run: cargo run 20220122 東京都 2>/dev/null
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.17.0
