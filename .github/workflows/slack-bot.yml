@@ -55,7 +55,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "plain_text",
-                    "text": "${{ steps.execute-cargo-run.inputs.prefecture }}の${{ steps.execute-cargo-run.inputs.date }}の感染者数は ${{ steps.execute-cargo-run.outputs.RESULT }}人でした！ ",
+                    "text": "${{ github.event.inputs.prefecture }}の${{ github.event.inputs.date }}の感染者数は ${{ steps.execute-cargo-run.outputs.RESULT }}人でした！ ",
                     "emoji": true
                   }
                 }
