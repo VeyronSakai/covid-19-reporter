@@ -1,5 +1,15 @@
 name: Slack Bot
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+    inputs:
+      date:
+        required: true
+        description: 日付 (例えば2022年1月1日の場合は 20220101 のように入力してください)
+        default: ""
+      prefecture:
+        required: true
+        description: 都道府県名
+        default: 東京都
 
 jobs:
   report-covid19:
@@ -16,7 +26,7 @@ jobs:
           toolchain: stable
       - name: execute
         id: execute-cargo-run
-        run: echo "::set-output name=RESULT::$(cargo run 20220122 東京都 2>/dev/null)"
+        run: echo "::set-output name=RESULT::$(cargo run ${{ github.event.inputs.date }} ${{ github.event.inputs.prefecture }} 2>/dev/null)"
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.17.0
